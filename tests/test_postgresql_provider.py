@@ -439,6 +439,8 @@ def test_get_fields_with_column_comments(config):
 
             # Act
             fields = p.get_fields()
+            print("Fields")
+            print(fields)
 
             # Assert
             assert fields
