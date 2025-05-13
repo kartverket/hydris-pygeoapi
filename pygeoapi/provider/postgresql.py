@@ -260,14 +260,16 @@ class PostgreSQLProvider(BaseProvider):
             except KeyError:
                 LOGGER.debug('No string format detected')
                 return None
-
+        print("start")
         if not self._fields:
+            print("no fields")
             # Get column comments from PostgreSQL
             try:
                 column_comments = self._get_column_comments()
             except Exception as e:
+                print(str(e))
                 LOGGER.warning(f'Failed to retrieve column comments: {str(e)}')
-
+            print(column_comments)
             for column in self.table_model.__table__.columns:
                 LOGGER.debug(f'Testing {column.name}')
                 if column.name == self.geom:
@@ -278,7 +280,7 @@ class PostgreSQLProvider(BaseProvider):
                     'title': column_comments.get(str(column.name), ''),
                     'format': _column_format_to_json_schema_format(column.type)
                 }
-
+        print("done")
         return self._fields
 
     def _get_column_comments(self):
