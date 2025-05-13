@@ -275,7 +275,7 @@ class PostgreSQLProvider(BaseProvider):
 
                 self._fields[str(column.name)] = {
                     'type': _column_type_to_json_schema_type(column.type),
-                    'title': column_comments.get(column.name, ''),
+                    'title': column_comments.get(str(column.name), ''),
                     'format': _column_format_to_json_schema_format(column.type)
                 }
 
