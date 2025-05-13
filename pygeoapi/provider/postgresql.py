@@ -302,7 +302,9 @@ class PostgreSQLProvider(BaseProvider):
         with Session(self._engine) as session:
             # Get the schema name from the search path
             schema = self.db_search_path[0]
-
+            print("params")
+            print(schema)
+            print(self.table)
             result = session.execute(
                 get_column_comments_sql,
                 {'schema': schema, 'table': self.table}
