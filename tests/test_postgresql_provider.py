@@ -387,11 +387,11 @@ def test_get_fields_types(config_types):
     provider = PostgreSQLProvider(config_types)
 
     expected_fields = {
-        'id': {'type': 'integer', 'format': None},
-        'field1': {'type': 'number', 'format': None},
-        'field2': {'type': 'string', 'format': None},
-        'field3': {'type': 'number', 'format': None},
-        'dt': {'type': 'string', 'format': 'date-time'}
+        'id': {'type': 'integer', 'title': None, 'format': None},
+        'field1': {'type': 'number', 'title': None, 'format': None},
+        'field2': {'type': 'string', 'title': None, 'format': None},
+        'field3': {'type': 'number', 'title': None, 'format': None},
+        'dt': {'type': 'string', 'title': None, 'format': 'date-time'}
     }
 
     assert provider.get_fields() == expected_fields
@@ -401,18 +401,18 @@ def test_get_fields_types(config_types):
 def test_get_fields(config):
     # Arrange
     expected_fields = {
-        'blockage': {'type': 'string', 'format': None},
-        'covered': {'type': 'string', 'format': None},
-        'depth': {'type': 'string', 'format': None},
-        'layer': {'type': 'string', 'format': None},
-        'name': {'type': 'string', 'format': None},
-        'natural': {'type': 'string', 'format': None},
-        'osm_id': {'type': 'integer', 'format': None},
-        'tunnel': {'type': 'string', 'format': None},
-        'water': {'type': 'string', 'format': None},
-        'waterway': {'type': 'string', 'format': None},
-        'width': {'type': 'string', 'format': None},
-        'z_index': {'type': 'string', 'format': None}
+        'blockage': {'type': 'string', 'title': None, 'format': None},
+        'covered': {'type': 'string', 'title': None, 'format': None},
+        'depth': {'type': 'string', 'title': None, 'format': None},
+        'layer': {'type': 'string', 'title': None, 'format': None},
+        'name': {'type': 'string', 'title': None, 'format': None},
+        'natural': {'type': 'string', 'title': None, 'format': None},
+        'osm_id': {'type': 'integer', 'title': None, 'format': None},
+        'tunnel': {'type': 'string', 'title': None, 'format': None},
+        'water': {'type': 'string', 'title': None, 'format': None},
+        'waterway': {'type': 'string', 'title': None, 'format': None},
+        'width': {'type': 'string', 'title': None, 'format': None},
+        'z_index': {'type': 'string', 'title': None, 'format': None}
     }
 
     # Act
