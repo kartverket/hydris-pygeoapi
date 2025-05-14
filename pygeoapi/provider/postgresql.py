@@ -291,7 +291,7 @@ class PostgreSQLProvider(BaseProvider):
 
         get_column_comments_sql = text("""
             SELECT column_name, col_description(
-                (quote_ident(table_schema) || '.' || quote_ident(table_name))::regclass::oid,
+                (quote_ident(:schema) || '.' || quote_ident(:table))::regclass::oid,
                 ordinal_position
             ) as column_comment
             FROM information_schema.columns
