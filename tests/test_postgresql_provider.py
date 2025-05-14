@@ -432,7 +432,7 @@ def test_get_fields_with_column_comments(config):
         try:
             # Add comment to name column
             conn.execute(text("""
-                ALTER TABLE osm.hotosm_bdi_waterways change column name comment 'The name of the feature';
+                COMMENT ON COLUMN osm.hotosm_bdi_waterways.name IS 'The name of the feature';
             """))
 
             conn.commit()
