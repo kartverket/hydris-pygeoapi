@@ -308,7 +308,7 @@ class PostgreSQLProvider(BaseProvider):
             result = session.execute(
                 get_column_comments_sql,
                 {'schema': schema, 'table': self.table}
-            )
+            ).all()
 
             for row in result:
                 column_comments[row.column_name] = row.column_comment
