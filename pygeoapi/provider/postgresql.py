@@ -287,7 +287,6 @@ class PostgreSQLProvider(BaseProvider):
         """
         Get column comments from PostgreSQL
         """
-        column_comments = {}
 
         get_column_comments_sql = text("""
             SELECT column_name, col_description(
@@ -305,17 +304,15 @@ class PostgreSQLProvider(BaseProvider):
             print("params")
             print(schema)
             print(self.table)
+            
             result = session.execute(
                 get_column_comments_sql,
                 {'schema': schema, 'table': self.table}
             ).all()
 
-            for row in result:
-                column_comments[row.column_name] = row.column_comment
-                LOGGER.debug(
-                    f'Found comment for column '
-                    f'{row.column_name}: {row.column_comment}'
-                )
+            print(result)
+            
+            { row.column_name: row.column_comment for row in result}
 
         return column_comments
 
