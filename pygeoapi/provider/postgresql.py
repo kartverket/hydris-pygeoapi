@@ -307,7 +307,6 @@ class PostgreSQLProvider(BaseProvider):
 
             return {key: value for (key, value) in result}
 
-
     def get(self, identifier, crs_transform_spec=None, **kwargs):
         """
         Query the provider for a specific
