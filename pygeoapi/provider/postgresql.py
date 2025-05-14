@@ -312,9 +312,8 @@ class PostgreSQLProvider(BaseProvider):
 
             print(result)
             
-            { key: value for (key, value) in result}
+            return { key: value for (key, value) in result}
 
-        return column_comments
 
     def get(self, identifier, crs_transform_spec=None, **kwargs):
         """
