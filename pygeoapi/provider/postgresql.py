@@ -284,11 +284,10 @@ class PostgreSQLProvider(BaseProvider):
         """
         Get column comments from PostgreSQL
         """
-        column_comments = {}
 
         get_column_comments_sql = text("""
             SELECT column_name, col_description(
-                (quote_ident(:schema) || '.' || quote_ident(:table))::regclass::oid,
+                (quote_ident(table_schema) || '.' || quote_ident(table_name))::regclass::oid,
                 ordinal_position
             ) as column_comment
             FROM information_schema.columns
@@ -303,16 +302,9 @@ class PostgreSQLProvider(BaseProvider):
             result = session.execute(
                 get_column_comments_sql,
                 {'schema': schema, 'table': self.table}
-            )
+            ).all()
 
-            for row in result:
-                column_comments[row.column_name] = row.column_comment
-                LOGGER.debug(
-                    f'Found comment for column '
-                    f'{row.column_name}: {row.column_comment}'
-                )
-
-        return column_comments
+            return {key: value for (key, value) in result}
 
     def get(self, identifier, crs_transform_spec=None, **kwargs):
         """
