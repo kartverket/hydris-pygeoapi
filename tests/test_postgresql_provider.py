@@ -449,6 +449,7 @@ def test_get_fields_with_column_comments(config):
     assert 'title' in fields['name']
     assert fields['name']['title'] == 'The name of the feature'
 
+
 def test_instantiation(config):
     """Test attributes are correctly set during instantiation."""
     # Act
