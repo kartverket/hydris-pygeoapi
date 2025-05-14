@@ -431,9 +431,10 @@ def test_get_fields_with_column_comments(config):
 
     with p._engine.connect() as conn:
         # Add comment to name column
-        conn.execute(text(
-          "COMMENT ON COLUMN osm.hotosm_bdi_waterways.name IS 'The name of the feature';"
-        ))
+        conn.execute(text("""
+          COMMENT ON COLUMN osm.hotosm_bdi_waterways.name
+          IS 'The name of the feature';
+        """))
 
         conn.commit()
 
