@@ -312,7 +312,7 @@ class PostgreSQLProvider(BaseProvider):
 
             print(result)
             
-            { row.column_name: row.column_comment for row in result}
+            { key: value for (key, value) in result}
 
         return column_comments
 
