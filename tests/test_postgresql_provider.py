@@ -425,6 +425,7 @@ def test_get_fields(config):
 
 def test_get_fields_with_column_comments(config):
     """Test that column comments are properly read and added as field titles"""
+
     # Arrange
     p = PostgreSQLProvider(config)
 
@@ -437,11 +438,11 @@ def test_get_fields_with_column_comments(config):
 
         conn.commit()
 
-    p = PostgreSQLProvider(config)
     # Act
+    # Fetch the provider again to eagerly load the comment
+    p = PostgreSQLProvider(config)
+
     fields = p.get_fields()
-    print("Fields")
-    print(fields)
 
     # Assert
     assert fields
