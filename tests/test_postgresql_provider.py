@@ -437,6 +437,7 @@ def test_get_fields_with_column_comments(config):
 
         conn.commit()
 
+    p = PostgreSQLProvider(config)
     # Act
     fields = p.get_fields()
     print("Fields")
