@@ -430,7 +430,6 @@ def test_get_fields_with_column_comments(config):
     p = PostgreSQLProvider(config)
 
     with p._engine.connect() as conn:
-        #try:
             # Add comment to name column
         conn.execute(text("""
             COMMENT ON COLUMN osm.hotosm_bdi_waterways.name IS 'The name of the feature';
@@ -449,15 +448,6 @@ def test_get_fields_with_column_comments(config):
     assert 'name' in fields
     assert 'title' in fields['name']
     assert fields['name']['title'] == 'The name of the feature'
-
-
-        #finally:
-        #    # Clean up - remove the comment
-        #    conn.execute(text("""
-        #        COMMENT ON COLUMN osm.hotosm_bdi_waterways.name IS NULL;
-        #    """))
-        #    conn.commit()
-
 
 def test_instantiation(config):
     """Test attributes are correctly set during instantiation."""

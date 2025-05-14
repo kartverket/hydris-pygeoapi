@@ -275,7 +275,7 @@ class PostgreSQLProvider(BaseProvider):
 
                 self._fields[str(column.name)] = {
                     'type': _column_type_to_json_schema_type(column.type),
-                    'title': column_comments.get(str(column.name), ''),
+                    'title': column_comments.get(column.name, ''),
                     'format': _column_format_to_json_schema_format(column.type)
                 }
 
@@ -299,7 +299,6 @@ class PostgreSQLProvider(BaseProvider):
         with Session(self._engine) as session:
             # Get the schema name from the search path
             schema = self.db_search_path[0]
-            
             result = session.execute(
                 get_column_comments_sql,
                 {'schema': schema, 'table': self.table}
