@@ -42,6 +42,8 @@
 
 import os
 import json
+
+from sqlalchemy import text
 import pytest
 import pyproj
 from http import HTTPStatus
@@ -385,11 +387,11 @@ def test_get_fields_types(config_types):
     provider = PostgreSQLProvider(config_types)
 
     expected_fields = {
-        'id': {'type': 'integer', 'format': None},
-        'field1': {'type': 'number', 'format': None},
-        'field2': {'type': 'string', 'format': None},
-        'field3': {'type': 'number', 'format': None},
-        'dt': {'type': 'string', 'format': 'date-time'}
+        'id': {'type': 'integer', 'title': None, 'format': None},
+        'field1': {'type': 'number', 'title': None, 'format': None},
+        'field2': {'type': 'string', 'title': None, 'format': None},
+        'field3': {'type': 'number', 'title': None, 'format': None},
+        'dt': {'type': 'string', 'title': None, 'format': 'date-time'}
     }
 
     assert provider.get_fields() == expected_fields
@@ -399,18 +401,18 @@ def test_get_fields_types(config_types):
 def test_get_fields(config):
     # Arrange
     expected_fields = {
-        'blockage': {'type': 'string', 'format': None},
-        'covered': {'type': 'string', 'format': None},
-        'depth': {'type': 'string', 'format': None},
-        'layer': {'type': 'string', 'format': None},
-        'name': {'type': 'string', 'format': None},
-        'natural': {'type': 'string', 'format': None},
-        'osm_id': {'type': 'integer', 'format': None},
-        'tunnel': {'type': 'string', 'format': None},
-        'water': {'type': 'string', 'format': None},
-        'waterway': {'type': 'string', 'format': None},
-        'width': {'type': 'string', 'format': None},
-        'z_index': {'type': 'string', 'format': None}
+        'blockage': {'type': 'string', 'title': None, 'format': None},
+        'covered': {'type': 'string', 'title': None, 'format': None},
+        'depth': {'type': 'string', 'title': None, 'format': None},
+        'layer': {'type': 'string', 'title': None, 'format': None},
+        'name': {'type': 'string', 'title': None, 'format': None},
+        'natural': {'type': 'string', 'title': None, 'format': None},
+        'osm_id': {'type': 'integer', 'title': None, 'format': None},
+        'tunnel': {'type': 'string', 'title': None, 'format': None},
+        'water': {'type': 'string', 'title': None, 'format': None},
+        'waterway': {'type': 'string', 'title': None, 'format': None},
+        'width': {'type': 'string', 'title': None, 'format': None},
+        'z_index': {'type': 'string', 'title': None, 'format': None}
     }
 
     # Act
@@ -419,6 +421,34 @@ def test_get_fields(config):
     # Assert
     assert provider.get_fields() == expected_fields
     assert provider.fields == expected_fields  # API uses .fields attribute
+
+
+def test_get_fields_with_column_comments(config):
+    """Test that column comments are properly read and added as field titles"""
+
+    # Arrange
+    p = PostgreSQLProvider(config)
+
+    with p._engine.connect() as conn:
+        # Add comment to name column
+        conn.execute(text("""
+          COMMENT ON COLUMN osm.hotosm_bdi_waterways.name
+          IS 'The name of the feature';
+        """))
+
+        conn.commit()
+
+    # Act
+    # Fetch the provider again to eagerly load the comment
+    p = PostgreSQLProvider(config)
+
+    fields = p.get_fields()
+
+    # Assert
+    assert fields
+    assert 'name' in fields
+    assert 'title' in fields['name']
+    assert fields['name']['title'] == 'The name of the feature'
 
 
 def test_instantiation(config):

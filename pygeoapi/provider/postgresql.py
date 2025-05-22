@@ -63,7 +63,7 @@ from pygeofilter.backends.sqlalchemy.evaluate import to_filter
 import pyproj
 import shapely
 from sqlalchemy import create_engine, MetaData, PrimaryKeyConstraint, asc, \
-    desc, delete
+    desc, delete, text
 from sqlalchemy.engine import URL
 from sqlalchemy.exc import ConstraintColumnNotFoundError, \
     InvalidRequestError, OperationalError
@@ -261,6 +261,12 @@ class PostgreSQLProvider(BaseProvider):
                 return None
 
         if not self._fields:
+            # Get column comments from PostgreSQL
+            try:
+                column_comments = self._get_column_comments()
+            except Exception as e:
+                LOGGER.warning(f'Failed to retrieve column comments: {str(e)}')
+
             for column in self.table_model.__table__.columns:
                 LOGGER.debug(f'Testing {column.name}')
                 if column.name == self.geom:
@@ -268,10 +274,37 @@ class PostgreSQLProvider(BaseProvider):
 
                 self._fields[str(column.name)] = {
                     'type': _column_type_to_json_schema_type(column.type),
+                    'title': column_comments.get(column.name, ''),
                     'format': _column_format_to_json_schema_format(column.type)
                 }
 
         return self._fields
+
+    def _get_column_comments(self):
+        """
+        Get column comments from PostgreSQL
+        """
+
+        get_column_comments_sql = text("""
+            SELECT column_name, col_description(
+                (quote_ident(table_schema) || '.' || quote_ident(table_name))::regclass::oid,
+                ordinal_position
+            ) as column_comment
+            FROM information_schema.columns
+            WHERE table_schema = :schema
+            AND table_name = :table
+        """)  # noqa
+
+        with Session(self._engine) as session:
+            # Get the schema name from the search path
+            schema = self.db_search_path[0]
+
+            result = session.execute(
+                get_column_comments_sql,
+                {'schema': schema, 'table': self.table}
+            ).all()
+
+            return dict(result)
 
     def get(self, identifier, crs_transform_spec=None, **kwargs):
         """
