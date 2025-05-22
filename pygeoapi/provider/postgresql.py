@@ -304,7 +304,7 @@ class PostgreSQLProvider(BaseProvider):
                 {'schema': schema, 'table': self.table}
             ).all()
 
-            return {key: value for (key, value) in result}
+            return dict(result)
 
     def get(self, identifier, crs_transform_spec=None, **kwargs):
         """
