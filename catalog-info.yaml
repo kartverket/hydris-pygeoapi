@@ -8,5 +8,5 @@ metadata:
 spec:
   type: "service"
   lifecycle: "production"
-  owner: "handsfree"
+  owner: "hydris"
   system: "hydris"
